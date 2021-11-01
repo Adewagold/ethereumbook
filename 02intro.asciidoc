@@ -346,7 +346,7 @@ Next comes the actual withdrawal:
 [[withdraw_command]]
 [source,solidity]
 ----
-msg.sender.transfer(withdraw_amount);
+payable(msg.sender).transfer(withdraw_amount);
 ----
 
 A couple of interesting things are happening here. The +msg+ object is one of the inputs that all contracts can access. It represents the transaction that triggered the execution of this contract. The attribute +sender+ is the sender address of the transaction. The function +transfer+ is a built-in function that transfers ether from the current contract to the address of the sender. Reading it backward, this means +transfer+ to the +sender+ of the +msg+ that triggered this contract execution. The +transfer+ function takes an amount as its only argument. We pass the +withdraw_amount+ value that was the parameter to the +withdraw+ function declared a few lines earlier.
@@ -524,7 +524,7 @@ This "internal transaction" was sent by the contract in this line of code (from 
 [[withdraw_command_review]]
 [source,solidity]
 ----
-msg.sender.transfer(withdraw_amount);
+payable(msg.sender).transfer(withdraw_amount);
 ----
 
 To recap: you sent a transaction from your MetaMask wallet that contained data instructions to call the +withdraw+ function with a +withdraw_amount+ argument of 0.1 ether. That transaction caused the contract to run inside the EVM. As the EVM ran the +Faucet+ contract's +withdraw+ function, first it called the +require+ function and validated that the requested amount was less than or equal to the maximum allowed withdrawal of 0.1 ether. Then it called the +transfer+ function to send you the ether. Running the +transfer+ function generated an internal transaction that deposited 0.1 ether into your wallet address, from the contract's balance. That's the one shown on the Internal Transactions tab in Etherscan(((range="endofrange", startref="ix_02intro-asciidoc20")))(((range="endofrange", startref="ix_02intro-asciidoc19"))).(((range="endofrange", startref="ix_02intro-asciidoc14")))
